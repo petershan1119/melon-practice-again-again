@@ -1,11 +1,9 @@
 from datetime import datetime
 from pathlib import Path
-
 import requests
 from django.core.files import File
 from django.db import models
 from io import BytesIO
-
 from crawler.artist import ArtistData
 
 
@@ -35,7 +33,7 @@ class ArtistManager(models.Manager):
         temp_file.write(binary_data)
         temp_file.seek(0)
 
-        artist, created = self.objects.update_or_create(
+        artist, artist_created = self.update_or_create(
             melon_id=artist_id,
             defaults={
                 'name': name,
@@ -49,6 +47,7 @@ class ArtistManager(models.Manager):
 
         file_name = Path(url_img_cover).name
         artist.img_profile.save(file_name, File(temp_file))
+        return artist, artist_created
 
 
 class Artist(models.Model):

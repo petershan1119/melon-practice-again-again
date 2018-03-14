@@ -2,6 +2,24 @@ from django.db import models
 
 from album.models import Album
 from artist.models import Artist
+from crawler.song import SongData
+
+
+class SongManager(models.Manager):
+    def update_or_create_from_melon_id(self, song_id):
+        song_data = SongData(song_id)
+        song_data.get_detail()
+        song, song_created = Song.objects.update_or_create(
+            song_id=song_id,
+            defaults={
+                'title': song_data.title,
+                'genre': song_data.genre,
+                'lyrics': song_data.lyrics,
+            }
+        )
+        artist, _ = Artist.objects.update_or_create_from_melon(song_data.artist_id)
+        song.artists.add(artist)
+        return song, song_created
 
 
 class Song(models.Model):
@@ -12,6 +30,8 @@ class Song(models.Model):
     title = models.CharField('곡 제목', max_length=100)
     genre = models.CharField('장르', max_length=100)
     lyrics = models.TextField('가사', blank=True)
+
+    objects = SongManager()
 
     @property
     def release_date(self):
