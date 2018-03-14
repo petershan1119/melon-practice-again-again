@@ -14,12 +14,12 @@ class Song(models.Model):
     lyrics = models.TextField('가사', blank=True)
 
     @property
-    def artists(self):
-        return self.artists.all()
-
-    @property
     def release_date(self):
         return self.album.release_date
+
+    @property
+    def formatted_release_date(self):
+        return self.release_date.strftime('%Y.%m.%d')
 
     def __str__(self):
         return self.title
