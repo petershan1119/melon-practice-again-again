@@ -18,11 +18,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from . import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('album/', include('album.urls')),
     path('artist/', include('artist.urls')),
     path('song/', include('song.urls')),
+    path('', views.index, name='index'),
 ]
 
 urlpatterns += static(
