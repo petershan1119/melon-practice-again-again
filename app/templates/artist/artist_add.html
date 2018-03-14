@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Artist Add</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="text" name="name" >
+    <button type="submit">등록</button>
+</form>
+{% endblock %}

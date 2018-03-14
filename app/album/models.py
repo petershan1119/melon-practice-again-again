@@ -8,7 +8,7 @@ class Album(models.Model):
 
     @property
     def genre(self):
-        return ''
+        return ', '.join(self.song_set.values_list('genre', flat=True).distinct())
 
     def __str__(self):
         return self.title

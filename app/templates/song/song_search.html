@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    <h1><a href="{% url 'song:song-search' %}">노래 검색</a></h1>
+    <form action="" method="GET">
+        <input type="text" name="keyword">
+        <button type="subnmit">검색</button>
+    </form>
+
+    {% include 'include/song_search_result.html' with type='앨범명' songs=songs_from_albums only %}
+    {% include 'include/song_search_result.html' with type='노래제목' songs=songs_from_title only %}
+</div>
+{% endblock %}
