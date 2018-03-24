@@ -16,4 +16,4 @@ def get_buffer_ext(buffer):
     buffer.seek(0)
     mime_info = magic.from_buffer(buffer.read(), mime=True)
     buffer.seek(0)
-    return mime_info.split('/')
+    return mime_info.split('/')[-1]

@@ -62,6 +62,8 @@ class ArtistManager(models.Manager):
         )
 
         # file_name = Path(url_img_cover).name
+        if artist.img_profile:
+            artist.img_profile.delete()
         artist.img_profile.save(file_name, File(temp_file))
         return artist, artist_created
 
