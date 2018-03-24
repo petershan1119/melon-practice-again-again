@@ -1,7 +1,9 @@
+$color-btn: #00cd3c;
+
 html, body {
   margin: 0;
   padding: 0;
-  font-size: 13px;
+  font-size: 14px;
   background-color: #fff;
   height: 100%;
 }
@@ -12,7 +14,6 @@ body {
   max-width: 1000px;
   margin: 0 auto;
 }
-
 ul, ol {
   margin: 0;
   padding: 0;
@@ -22,9 +23,16 @@ a {
   text-decoration: none;
   color: #7cb710;
 }
-.clearfix:after {
+.clearfix::after {
   content: '';
   height: 0;
   clear: both;
   display: block;
+}
+.btn {
+  background-color: $color-btn;
+  font-size: 20px;
+  padding: 17px 40px;
+  border: none;
+  color: white;
 }
