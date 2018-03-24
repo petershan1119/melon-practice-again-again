@@ -9,6 +9,7 @@ class SongManager(models.Manager):
     def update_or_create_from_melon_id(self, song_id):
         song_data = SongData(song_id)
         song_data.get_detail()
+
         song, song_created = Song.objects.update_or_create(
             song_id=song_id,
             defaults={

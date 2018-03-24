@@ -1,13 +1,27 @@
 from datetime import datetime
 from pathlib import Path
+
+import magic
 import requests
+from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.db import models
 from io import BytesIO
+
+from django.db.models.fields.files import FieldFile
+from django.forms import model_to_dict
+
 from crawler.artist import ArtistData
+from utils.file import download, get_buffer_ext
 
 
 class ArtistManager(models.Manager):
+    def to_dict(self):
+        result = []
+        for instance in self.get_queryset():
+            result.append(instance.to_json())
+        return result
+
     def update_or_create_from_melon(self, artist_id):
         artist = ArtistData(artist_id)
         artist.get_detail()
@@ -27,11 +41,7 @@ class ArtistManager(models.Manager):
             else:
                 blood_type = Artist.BLOOD_TYPE_OTHER
 
-        response = requests.get(url_img_cover)
-        binary_data = response.content
-        temp_file = BytesIO()
-        temp_file.write(binary_data)
-        temp_file.seek(0)
+
 
         artist, artist_created = self.update_or_create(
             melon_id=artist_id,
@@ -45,7 +55,13 @@ class ArtistManager(models.Manager):
             }
         )
 
-        file_name = Path(url_img_cover).name
+        temp_file = download(url_img_cover)
+        file_name = '{artist_id}.{ext}'.format(
+            artist_id=artist_id,
+            ext=get_buffer_ext(temp_file),
+        )
+
+        # file_name = Path(url_img_cover).name
         artist.img_profile.save(file_name, File(temp_file))
         return artist, artist_created
 
@@ -76,3 +92,30 @@ class Artist(models.Model):
 
     def __str__(self):
         return self.name
+
+    def to_json(self):
+        user_class = get_user_model()
+
+        ret = model_to_dict(self)
+
+        def convert_value(value):
+            if isinstance(value, FieldFile):
+                return value.url if value else None
+            elif isinstance(value, user_class):
+                return value.pk
+            # elif isinstance(value, ArtistYoutube):
+            #     return value.pk
+            return value
+
+
+        def convert_obj(obj):
+            if isinstance(obj, list):
+                for index, item in enumerate(obj):
+                    obj[index] = convert_obj(item)
+            elif isinstance(obj, dict):
+                for key, value in obj.items():
+                    obj[key] = convert_obj(value)
+            return convert_value(obj)
+
+        convert_obj(ret)
+        return ret
