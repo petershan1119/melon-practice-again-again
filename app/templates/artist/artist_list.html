@@ -1,22 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="artist-list-container">
-<a href="{% url 'artist:artist-add' %}">아티스트 추가</a>
-<ul class="clearfix">
-    {% for artist in artists %}
-    <li class="clearfix">
-        <a href="">
-        <img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
-        <div class="artist-info">
-        <div class="name">{{ artist.name }}</div>
-        <div>{{ artist.nationality }}</div>
-        <div>{{ artist.birth_date }}</div>
-        <div>{{ artist.constellation }}</div>
-        <div>{{ artist.blood_type }}</div>
-            </div>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+    <a href="{% url 'artist:artist-add' %}">아티스트 추가</a>
+    <ul class="clearfix">
+        {% for artist in artists %}
+        <li class="clearfix">
+            <a href="">
+                <img src="{% if artist.img_profile %}{{ artist.img_profile.url }}{% endif %}" alt="" class="cover">
+                <div class="artist-info">
+                    <div class="name">{{ artist.name }}</div>
+                    <div>{{ artist.nationality }}</div>
+                    <div>{{ artist.birth_date }}</div>
+                    <div>{{ artist.constellation }}</div>
+                    <div>{{ artist.blood_type }}</div>
+                </div>
+
+                {% if request.user.is_authenticated %}
+                <form action="{% url 'artist:artist-like-toggle' artist_pk=artist.pk %}" method="POST">
+                    {% csrf_token %}
+                    {% if request.user in artist.like_users.all %}
+                    <button type="submit">좋아요 취소</button>
+                    {% else %}
+                    <button type="submit">좋아요</button>
+                    {% endif %}
+                </form>
+                {% endif %}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
