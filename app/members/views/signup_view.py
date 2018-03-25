@@ -1,23 +1,15 @@
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
 
 from members.forms import SignupForm
 
 User = get_user_model()
 
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
-    return render(request, 'members/login.html')
 
-def logout_view(request):
-    logout(request)
-    return redirect('index')
+__all__ = (
+    'signup_view',
+)
+
 
 def signup_view(request):
     # context = {
@@ -45,7 +37,7 @@ def signup_view(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             password2 = form.cleaned_data['password2']
-            # is_valid = True
+            is_valid = True
             # if User.objects.filter(username=username).exists():
             #     form.add_error('username', '이미 사용되고 있는 아이디입니다')
             #     is_valid = False

@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load song_extras %}
 {% block content %}
-<ul>
-    {% for song in songs %}
-    <li>{{ song.title }}</li>
-    {% endfor %}
-</ul>
+<div class="song-list-container">
+    <ul class="song-list">
+        {% for song in songs %}
+        <li class="song-list-item">
+            <div class="title">{{ song.title }}</div>
+            <div class="lyrics">{{ song.lyrics|ellipsis_line:4|linebreaksbr }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
