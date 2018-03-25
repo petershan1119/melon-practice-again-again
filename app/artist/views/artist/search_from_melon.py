@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 
+from artist.models import Artist
 
 __all__ = (
     'artist_search_from_melon',
@@ -32,6 +33,7 @@ def artist_search_from_melon(request):
                 'name': name,
                 'url_img_cover': url_img_cover,
                 'artist_id': artist_id,
+                'is_exist': Artist.objects.filter(melon_id=artist_id).exists(),
             })
         context['artist_info_list'] = artist_info_list
     return render(request, 'artist/artist_search_from_melon.html', context)
