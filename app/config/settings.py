@@ -121,6 +121,14 @@ DATABASES = {
     }
 }
 
+FACEBOOK_APP_ID = '131126921059545'
+FACEBOOK_SECRET_CODE = '85760a78e68aa4299f4454ffd4aae844'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'members.backends.FacebookBackend',
+]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
